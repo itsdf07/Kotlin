@@ -2,6 +2,7 @@ package com.aso.kotlin
 
 /**
  * Kotlin语法学习
+ * 1、多个Kotlin文件中可以重载，定义同名函数（包括函数名+参数）时，作用域不能使用默认的public，只能是private
  *
  * Created by itsdf07 on 2017/6/7 17:31.
  * E-Mail: 923255742@qq.com
@@ -26,7 +27,7 @@ fun main(args: Array<String>) {
 
     var person = Person("itsdf07")
     person.stature = 177
-    println("name = ${person.name}, sex = ${person.sex}, stature = ${person.stature}, isMarried = ${person.isMarried}")
+    println("name = ${person.name}, gender = ${person.gender}, stature = ${person.stature}, isMarried = ${person.isMarried}")
 
     test4()
     test6()
@@ -125,7 +126,7 @@ fun test6() {
 
 class Person(var name: String?) {
     //val 只有get获取器
-    val sex: String
+    val gender: String
         get() = "男"
 
     var stature: Int = 0
