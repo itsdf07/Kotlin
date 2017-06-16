@@ -2,22 +2,28 @@ package com.aso.kotlin
 
 /**
  * Kotlin语法学习
+ * 1、基础语法：函数、变量、类、枚举、控制流
+ * 2、基础语法：集合、扩展函数、扩展属性、vararg、infix、析构声明
+ * PS:
  * 1、多个Kotlin文件中可以重载，定义同名函数（包括函数名+参数）时，作用域不能使用默认的public，只能是private
  *
  * Created by itsdf07 on 2017/6/7 17:31.
  * E-Mail: 923255742@qq.com
  * GitHub: https://github.com/itsdf07
  */
-//1、基础语法：函数、变量、类、枚举、控制流
-
-//顶层变量：只有var、val声明方式，如果没有指定变量的类型时，
-// 在编译时由编译器自动根据赋予这个变量的值来推断这个变量的类型
-val i = "1" //相当于java中 final ，值不可以更改的
-var j = 2 //变量
-var z: String = "这是一个String类型数据"
 
 //顶层函数，类似java的main函数，其实也就是java的main函数，输入main可自动提示
 fun main(args: Array<String>) {
+    //1、基础语法：函数、变量、类、枚举、控制流
+//    grammar1()
+    //2、基础语法：集合、扩展函数、扩展属性、vararg、infix、析构声明
+    grammar2()
+}
+
+/**
+ * 1、基础语法：函数、变量、类、枚举、控制流
+ */
+fun grammar1() {
     println("这个是Kotlin的main函数")
     println(test())
     println(test1())
@@ -32,6 +38,27 @@ fun main(args: Array<String>) {
     test4()
     test6()
 }
+
+/**
+ * 2、基础语法：集合、扩展函数、扩展属性、vararg、infix、析构声明
+ */
+fun grammar2() {
+    collection()
+    derivativeFun()
+    varargFun(5, 4, 3, 2, 1)
+    var person = Person("itsdf07")
+    println("扩展函数返回值：result = ${person.showInfo()}")
+    println("扩展属性值：idCard = ${person.idCard}")
+}
+
+//------------------------------------------------------------------------------------------
+//1、基础语法：函数、变量、类、枚举、控制流
+
+//顶层变量：只有var、val声明方式，如果没有指定变量的类型时，
+// 在编译时由编译器自动根据赋予这个变量的值来推断这个变量的类型
+val i = "1" //相当于java中 final ，值不可以更改的
+var j = 2 //变量
+var z: String = "这是一个String类型数据"
 
 fun test(): String {
     return "这个是Kotlin函数的return内容"
@@ -150,3 +177,105 @@ enum class Color(val r: Int, val g: Int, val b: Int) {
     YELLOW(255, 255, 0)
 }
 
+//------------------------------------------------------------------------------------------
+//2、基础语法：集合、扩展函数、扩展属性、vararg、infix、析构声明
+/**
+ * 集合数据源:同样也有arrayListOf()
+ */
+fun getListCollection() = listOf(1, 2, 3)//listOf可以传递任意长度的参数，类似java的可变长度的参数，如 String...
+
+/**
+ * 集合
+ */
+fun collection() {
+    val list = getListCollection()
+    val listFirst = list[0]//获取集合内第一个元素
+    val listLast = list.last()//获取集合内最后一个元素
+    println("listFirst = ${listFirst}, listLast = ${listLast}")
+
+    //list集合遍历
+    list.forEach {
+        //方式一：直接遍历，使用it条目变量
+        println("集合的遍历方式：forEach -> it = ${it}")//it为遍历时赋予的条目
+        //方式二：item为自定义的条目变量名，也就是说不一定是item，也可以是xxx
+//        item ->
+//        println("集合的遍历方式：forEach -> it = ${item}")//it为遍历时赋予的条目
+    }
+    for (i in list) {
+        println("集合的遍历方式：for -> i = $i")//i为遍历时赋予的条目
+    }
+
+    list.forEachIndexed {
+        index, i ->
+        println("集合的遍历方式：forEachIndexed -> index = ${index}, i = ${i}")//i为遍历时赋予的条目
+    }
+
+    /**
+     * map映射集合:查看mapOf参数是一个Pair<K, V>，下面mapOf参数为:
+     * 1 to "key1" //中缀调用的方式：infix
+     * 1.to("key1") //普通调用的方式
+     */
+    val map = mapOf(1 to "value1", 2.to("value2"), "key3" to "value3")
+
+    println("map映射集合：mapOf -> map[1] = ${map[1]}, map['key3'] = ${map["key3"]}")
+    val pair = "key4" with "value4"
+    map[pair]
+    println("map映射集合的参数追加 -> map['key4'] = ${map["key4"]}")
+    val (key, value) = pair//析构声明
+    println("析构声明 -> key = ${key}, value = ${value}")
+    val compile = "com.android.tools.build:gradle:2.2.2"
+    val (group, name, version) = compile.split(":")
+    println("析构声明 -> group = $group, name = $name, version = $version")
+//
+}
+
+/**
+ * 扩展函数:derivative 衍生
+ */
+fun derivativeFun() {
+    testFun1()//不带参数，使用参数默认值
+    testFun1(9, "我是一个参数：testFun1")//常规带参
+    testFun1(6)//按顺序，只赋值部分参数
+    testFun1(str = "调用testFun1时只传了str参数")//指定参数赋值，这种方式，可以使参数无序掉，这种方法可以避免大量的重载方法
+}
+
+/**
+ * 扩展函数
+ */
+inline fun Person.showInfo(): String {
+    return "inline关键字 Person.showInfo() idCard = ${name}"
+}
+
+/**
+ * 扩展属性：身份证
+ */
+inline val Person.idCard: String
+    get() = "3502121989xxxxxxxx"
+
+/**
+ *
+ * vararg 伪关键字
+ * 创建可变长度的方法，类似java的写法：String ...
+ */
+fun varargFun(vararg item: Int) {
+    println("vararg伪关键字 varargFun：item.size = ${item.size}")
+    //item就是一个数组
+    item.forEach {
+        println("vararg伪关键字 varargFun：item = ${it}")
+    }
+}
+
+/**
+ * 对参数设置默认值：调用时，
+ * 1、可以传递所有参数，也可以不传递任何参数，则使用默认值
+ * 2、可以传递其中的一个或者多个值进行设置
+ */
+fun testFun1(i: Int = 7, str: String = "这是扩展函数测试案例：testFun1") {
+    println("i:${i}, str:${str}")
+}
+
+/**
+ * infix：中缀调用方式，中缀调用方式的中缀函数
+ * A.with本是一个普通的泛型扩展方法，但是使用了infix关键字指定函数，所以with就可以使用中缀调用的方式
+ */
+infix fun <A, B> A.with(that: B): Pair<A, B> = Pair(this, that)
